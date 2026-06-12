@@ -365,8 +365,8 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
                   data-country={countryName}
                   aria-label={`Ver perfil de ${boxer.name}`}
                   data-active="false"
-                  class="boxer-cell group relative aspect-square animate-fade-in cursor-pointer overflow-hidden focus-visible:outline-none"
-                  style={`--col-mobile: ${colMobile}; --row-mobile: ${rowMobile}; --col-tablet: ${colTablet}; --row-tablet: ${rowTablet}; --col-desktop: ${colDesktop}; --row-desktop: ${rowDesktop}; animation-delay: ${1000 + index * 25}ms`}
+                  class="boxer-cell group relative aspect-square cursor-pointer overflow-hidden focus-visible:outline-none"
+                  style={`--col-mobile: ${colMobile}; --row-mobile: ${rowMobile}; --col-tablet: ${colTablet}; --row-tablet: ${rowTablet}; --col-desktop: ${colDesktop}; --row-desktop: ${rowDesktop}; animation-delay: ${800 + index * 60}ms`}
                   tabindex={index === 0 ? 0 : -1}
                 >
                   <picture>
@@ -507,13 +507,13 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       0 0 24px color-mix(in srgb, var(--color-theme-midnight) 70%, transparent);
   }
 
-  /* La cuadrícula del selector entra escalonada con un delay base de
-     1000ms + 25ms por celda (ver `animation-delay` inline en el HTML).
-     La última celda empieza a aparecer ~1475ms desde el inicio, así
+  /* La cuadrícula del selector entra pieza a pieza con un delay base de
+     800ms + 60ms por celda (ver `animation-delay` inline en el HTML).
+     La última celda empieza a aparecer ~2000ms desde el inicio, así
      que sincronizamos el divider y el CTA con ese momento. */
   .boxer-default-divider {
     opacity: 0;
-    animation: boxer-default-cta-fade-in 600ms ease-out 1350ms forwards;
+    animation: boxer-default-cta-fade-in 600ms ease-out 1900ms forwards;
   }
 
   .boxer-default-cta {
@@ -526,8 +526,8 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       0 0 28px color-mix(in srgb, var(--color-theme-midnight) 70%, transparent);
     opacity: 0;
     animation:
-      boxer-default-cta-fade-in 700ms cubic-bezier(0.16, 1, 0.3, 1) 1500ms forwards,
-      boxer-default-cta-pulse 2.4s ease-in-out 2300ms infinite;
+      boxer-default-cta-fade-in 700ms cubic-bezier(0.16, 1, 0.3, 1) 2100ms forwards,
+      boxer-default-cta-pulse 2.4s ease-in-out 2900ms infinite;
   }
 
   @keyframes boxer-default-cta-fade-in {
@@ -557,6 +557,11 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       animation: none;
       opacity: 1;
       transform: none;
+    }
+
+    .boxer-cell {
+      animation: none;
+      opacity: 1;
     }
   }
 
@@ -827,6 +832,28 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
        Los box-shadows de celdas adyacentes se solapan formando las líneas
        internas del grid, y el contorno exterior del bloque completo. */
     box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 32%, transparent);
+    /* Entrada pieza a pieza: cada celda encaja en el grid con su propio
+       animation-delay inline, una detrás de otra. */
+    opacity: 0;
+    animation: boxer-cell-snap-in 520ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes boxer-cell-snap-in {
+    0% {
+      opacity: 0;
+      transform: scale(0.4) rotate(-4deg) translateY(14px);
+      filter: blur(8px) brightness(1.6);
+    }
+    60% {
+      opacity: 1;
+      transform: scale(1.06) rotate(0.5deg) translateY(-2px);
+      filter: blur(0) brightness(1.15);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) rotate(0deg) translateY(0);
+      filter: blur(0) brightness(1);
+    }
   }
 
   .boxer-thumb-img {
